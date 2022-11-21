@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import CryptoBoys from "../abis/CryptoBoys.json";
+import CryptoToys from "../abis/CryptoToys.json";
 
 import FormAndPreview from "../components/FormAndPreview/FormAndPreview";
-import AllCryptoBoys from "./AllCryptoBoys/AllCryptoBoys";
+import AllCryptoToys from "./AllCryptoToys/AllCryptoToys";
 import AccountDetails from "./AccountDetails/AccountDetails";
 import ContractNotDeployed from "./ContractNotDeployed/ContractNotDeployed";
 import ConnectToMetamask from "./ConnectMetamask/ConnectToMetamask";
 import Loading from "./Loading/Loading";
 import Navbar from "./Navbar/Navbar";
-import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
+import MyCryptoToys from "./MyCryptoToys/MyCryptoToys";
 import Queries from "./Queries/Queries";
 
 const ipfsClient = require("ipfs-http-client");
@@ -33,9 +33,9 @@ class App extends Component {
     this.state = {
       accountAddress: "",
       accountBalance: "",
-      cryptoBoysContract: null,
-      cryptoBoysCount: 0,
-      cryptoBoys: [],
+      cryptoToysContract: null,
+      cryptoToysCount: 0,
+      cryptoToys: [],
       loading: true,
       metamaskConnected: false,
       contractDetected: false,
@@ -114,33 +114,33 @@ class App extends Component {
       this.setState({ accountBalance });
       this.setState({ loading: false });
       const networkId = await web3.eth.net.getId();
-      const networkData = CryptoBoys.networks[networkId];
+      const networkData = CryptoToys.networks[networkId];
       if (networkData) {
         this.setState({ loading: true });
-        const cryptoBoysContract = web3.eth.Contract(
-          CryptoBoys.abi,
+        const cryptoToysContract = web3.eth.Contract(
+          CryptoToys.abi,
           networkData.address
         );
-        this.setState({ cryptoBoysContract });
+        this.setState({ cryptoToysContract });
         this.setState({ contractDetected: true });
-        const cryptoBoysCount = await cryptoBoysContract.methods
-          .cryptoBoyCounter()
+        const cryptoToysCount = await cryptoToysContract.methods
+          .cryptoToyCounter()
           .call();
-        this.setState({ cryptoBoysCount });
-        for (var i = 1; i <= cryptoBoysCount; i++) {
-          const cryptoBoy = await cryptoBoysContract.methods
-            .allCryptoBoys(i)
+        this.setState({ cryptoToysCount });
+        for (var i = 1; i <= cryptoToysCount; i++) {
+          const cryptoToy = await cryptoToysContract.methods
+            .allCryptoToys(i)
             .call();
           this.setState({
-            cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
+            cryptoToys: [...this.state.cryptoToys, cryptoToy],
           });
         }
-        let totalTokensMinted = await cryptoBoysContract.methods
+        let totalTokensMinted = await cryptoToysContract.methods
           .getNumberOfTokensMinted()
           .call();
         totalTokensMinted = totalTokensMinted.toNumber();
         this.setState({ totalTokensMinted });
-        let totalTokensOwnedByAccount = await cryptoBoysContract.methods
+        let totalTokensOwnedByAccount = await cryptoToysContract.methods
           .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
           .call();
         totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
@@ -159,18 +159,18 @@ class App extends Component {
   };
 
   setMetaData = async () => {
-    if (this.state.cryptoBoys.length !== 0) {
-      this.state.cryptoBoys.map(async (cryptoboy) => {
-        const result = await fetch(cryptoboy.tokenURI);
+    if (this.state.cryptoToys.length !== 0) {
+      this.state.cryptoToys.map(async (cryptotoy) => {
+        const result = await fetch(cryptotoy.tokenURI);
         const metaData = await result.json();
         this.setState({
-          cryptoBoys: this.state.cryptoBoys.map((cryptoboy) =>
-            cryptoboy.tokenId.toNumber() === Number(metaData.tokenId)
+          cryptoToys: this.state.cryptoToys.map((cryptotoy) =>
+            cryptotoy.tokenId.toNumber() === Number(metaData.tokenId)
               ? {
-                  ...cryptoboy,
+                  ...cryptotoy,
                   metaData,
                 }
-              : cryptoboy
+              : cryptotoy
           ),
         });
       });
@@ -183,7 +183,7 @@ class App extends Component {
     let colorsUsed = [];
     for (let i = 0; i < colorsArray.length; i++) {
       if (colorsArray[i] !== "") {
-        let colorIsUsed = await this.state.cryptoBoysContract.methods
+        let colorIsUsed = await this.state.cryptoToysContract.methods
           .colorExists(colorsArray[i])
           .call();
         if (colorIsUsed) {
@@ -193,7 +193,7 @@ class App extends Component {
         }
       }
     }
-    const nameIsUsed = await this.state.cryptoBoysContract.methods
+    const nameIsUsed = await this.state.cryptoToysContract.methods
       .tokenNameExists(name)
       .call();
     if (colorsUsed.length === 0 && !nameIsUsed) {
@@ -215,14 +215,14 @@ class App extends Component {
         bodyBorderColor,
       } = colors;
       let previousTokenId;
-      previousTokenId = await this.state.cryptoBoysContract.methods
-        .cryptoBoyCounter()
+      previousTokenId = await this.state.cryptoToysContract.methods
+        .cryptoToyCounter()
         .call();
       previousTokenId = previousTokenId.toNumber();
       const tokenId = previousTokenId + 1;
       const tokenObject = {
-        tokenName: "Crypto Boy",
-        tokenSymbol: "CB",
+        tokenName: "Crypto Toy",
+        tokenSymbol: "CT",
         tokenId: `${tokenId}`,
         name: name,
         metaData: {
@@ -247,12 +247,12 @@ class App extends Component {
         },
       };
       const cid = await ipfs.add(JSON.stringify(tokenObject));
-      let tokenURI = `https://cryptoboys.infura-ipfs.io/ipfs/${cid.path}`;
+      let tokenURI = `https://cryptotoys.infura-ipfs.io/ipfs/${cid.path}`;
       console.log(tokenURI);
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
       console.log(this.state.accountAddress);
-      this.state.cryptoBoysContract.methods
-        .mintCryptoBoy(name, tokenURI, price, colorsArray)
+      this.state.cryptoToysContract.methods
+        .mintCryptoToy(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
         .on("confirmation", () => {
           localStorage.setItem(this.state.accountAddress, new Date().getTime());
@@ -273,7 +273,7 @@ class App extends Component {
 
   toggleForSale = (tokenId) => {
     this.setState({ loading: true });
-    this.state.cryptoBoysContract.methods
+    this.state.cryptoToysContract.methods
       .toggleForSale(tokenId)
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
@@ -285,7 +285,7 @@ class App extends Component {
   changeTokenPrice = (tokenId, newPrice) => {
     this.setState({ loading: true });
     const newTokenPrice = window.web3.utils.toWei(newPrice, "Ether");
-    this.state.cryptoBoysContract.methods
+    this.state.cryptoToysContract.methods
       .changeTokenPrice(tokenId, newTokenPrice)
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
@@ -294,9 +294,9 @@ class App extends Component {
       });
   };
 
-  buyCryptoBoy = (tokenId, price) => {
+  buyCryptoToy = (tokenId, price) => {
     this.setState({ loading: true });
-    this.state.cryptoBoysContract.methods
+    this.state.cryptoToysContract.methods
       .buyToken(tokenId)
       .send({ from: this.state.accountAddress, value: price })
       .on("confirmation", () => {
@@ -343,22 +343,22 @@ class App extends Component {
               <Route
                 path="/marketplace"
                 render={() => (
-                  <AllCryptoBoys
+                  <AllCryptoToys
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    cryptoToys={this.state.cryptoToys}
                     totalTokensMinted={this.state.totalTokensMinted}
                     changeTokenPrice={this.changeTokenPrice}
                     toggleForSale={this.toggleForSale}
-                    buyCryptoBoy={this.buyCryptoBoy}
+                    buyCryptoToy={this.buyCryptoToy}
                   />
                 )}
               />
               <Route
                 path="/my-tokens"
                 render={() => (
-                  <MyCryptoBoys
+                  <MyCryptoToys
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    cryptoToys={this.state.cryptoToys}
                     totalTokensOwnedByAccount={
                       this.state.totalTokensOwnedByAccount
                     }
@@ -368,7 +368,7 @@ class App extends Component {
               <Route
                 path="/queries"
                 render={() => (
-                  <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+                  <Queries cryptoToysContract={this.state.cryptoToysContract} />
                 )}
               />
             </HashRouter>

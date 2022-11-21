@@ -1,21 +1,21 @@
 const { assert } = require("chai");
 
-const CryptoBoys = artifacts.require("./CryptoBoys.sol");
+const CryptoToys = artifacts.require("./CryptoToys.sol");
 
 require("chai")
   .use(require("chai-as-promised"))
   .should();
 
-contract("Crypto Boys", async (accounts) => {
-  let cryptoBoys, result, cryptoBoyCount;
+contract("Crypto Toys", async (accounts) => {
+  let cryptoToys, result, cryptoToyCount;
 
   before(async () => {
-    cryptoBoys = await CryptoBoys.deployed();
+    cryptoToys = await CryptoToys.deployed();
   });
 
   describe("Deployment", async () => {
     it("contract has an address", async () => {
-      const address = await cryptoBoys.address;
+      const address = await cryptoToys.address;
       assert.notEqual(address, 0x0);
       assert.notEqual(address, "");
       assert.notEqual(address, null);
@@ -23,34 +23,34 @@ contract("Crypto Boys", async (accounts) => {
     });
 
     it("has a name", async () => {
-      const name = await cryptoBoys.collectionName();
+      const name = await cryptoToys.collectionName();
       assert.equal(name, "Crypto Boys Collection");
     });
 
     it("has a symbol", async () => {
-      const symbol = await cryptoBoys.collectionNameSymbol();
+      const symbol = await cryptoToys.collectionNameSymbol();
       assert.equal(symbol, "CB");
     });
   });
 
   describe("application features", async () => {
     it("allows users to mint ERC721 token", async () => {
-      cryptoBoyCount = await cryptoBoys.cryptoBoyCounter();
-      assert.equal(cryptoBoyCount.toNumber(), 0);
+      cryptoToyCount = await cryptoToys.cryptoToyCounter();
+      assert.equal(cryptoToyCount.toNumber(), 0);
 
       let tokenExists;
-      tokenExists = await cryptoBoys.getTokenExists(1, { from: accounts[0] });
+      tokenExists = await cryptoToys.getTokenExists(1, { from: accounts[0] });
       assert.equal(tokenExists, false);
 
       let tokenURIExists;
-      tokenURIExists = await cryptoBoys.tokenURIExists(
+      tokenURIExists = await cryptoToys.tokenURIExists(
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPHRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         { from: accounts[0] }
       );
       assert.equal(tokenURIExists, false);
 
       let tokenNameExists;
-      tokenNameExists = await cryptoBoys.tokenNameExists("myCBNFT", {
+      tokenNameExists = await cryptoToys.tokenNameExists("myCBNFT", {
         from: accounts[0],
       });
       assert.equal(tokenNameExists, false);
@@ -74,13 +74,13 @@ contract("Crypto Boys", async (accounts) => {
         "#4281a4",
       ];
       for (let i = 0; i < colorsArray1.length; i++) {
-        colorExists = await cryptoBoys.colorExists(colorsArray1[i], {
+        colorExists = await cryptoToys.colorExists(colorsArray1[i], {
           from: accounts[0],
         });
         assert.equal(colorExists, false);
       }
 
-      result = await cryptoBoys.mintCryptoBoy(
+      result = await cryptoToys.mintCryptoToy(
         "myCBNFT",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPHRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -88,49 +88,49 @@ contract("Crypto Boys", async (accounts) => {
         { from: accounts[0] }
       );
 
-      cryptoBoyCount = await cryptoBoys.cryptoBoyCounter();
-      assert.equal(cryptoBoyCount.toNumber(), 1);
+      cryptoToyCount = await cryptoToys.cryptoToyCounter();
+      assert.equal(cryptoToyCount.toNumber(), 1);
 
-      tokenExists = await cryptoBoys.getTokenExists(1, { from: accounts[0] });
+      tokenExists = await cryptoToys.getTokenExists(1, { from: accounts[0] });
       assert.equal(tokenExists, true);
 
-      tokenURIExists = await cryptoBoys.tokenURIExists(
+      tokenURIExists = await cryptoToys.tokenURIExists(
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPHRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         { from: accounts[0] }
       );
       assert.equal(tokenURIExists, true);
 
-      tokenNameExists = await cryptoBoys.tokenNameExists("myCBNFT", {
+      tokenNameExists = await cryptoToys.tokenNameExists("myCBNFT", {
         from: accounts[0],
       });
       assert.equal(tokenNameExists, true);
 
       for (let i = 0; i < colorsArray1.length; i++) {
-        colorExists = await cryptoBoys.colorExists(colorsArray1[i], {
+        colorExists = await cryptoToys.colorExists(colorsArray1[i], {
           from: accounts[0],
         });
         assert.equal(colorExists, true);
       }
 
-      let cryptoboy;
-      cryptoboy = await cryptoBoys.allCryptoBoys(1, {
+      let cryptotoy;
+      cryptotoy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoboy.tokenId.toNumber(), 1);
-      assert.equal(cryptoboy.tokenName, "myCBNFT");
+      assert.equal(cryptotoy.tokenId.toNumber(), 1);
+      assert.equal(cryptotoy.tokenName, "myCBNFT");
       assert.equal(
-        cryptoboy.tokenURI,
+        cryptotoy.tokenURI,
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPHRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2"
       );
-      assert.equal(cryptoboy.mintedBy, accounts[0]);
-      assert.equal(cryptoboy.currentOwner, accounts[0]);
+      assert.equal(cryptotoy.mintedBy, accounts[0]);
+      assert.equal(cryptotoy.currentOwner, accounts[0]);
       assert.equal(
-        cryptoboy.previousOwner,
+        cryptotoy.previousOwner,
         0x0000000000000000000000000000000000000000
       );
-      assert.equal(web3.utils.fromWei(cryptoboy.price, "ether"), 1);
-      assert.equal(cryptoboy.numberOfTransfers.toNumber(), 0);
-      assert.equal(cryptoboy.forSale, true);
+      assert.equal(web3.utils.fromWei(cryptotoy.price, "ether"), 1);
+      assert.equal(cryptotoy.numberOfTransfers.toNumber(), 0);
+      assert.equal(cryptotoy.forSale, true);
 
       const colorsArray2 = [
         "#212b2e",
@@ -150,7 +150,7 @@ contract("Crypto Boys", async (accounts) => {
         "#4181a4",
       ];
 
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT2",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPQRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -177,7 +177,7 @@ contract("Crypto Boys", async (accounts) => {
       ];
 
       // same token uri -reject
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT3",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPQRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -204,7 +204,7 @@ contract("Crypto Boys", async (accounts) => {
       ];
 
       // 0x0 adress sending txn - reject
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT4",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPQRYN14Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -230,7 +230,7 @@ contract("Crypto Boys", async (accounts) => {
         "#4d81a4",
       ];
 
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT5",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPRRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -256,7 +256,7 @@ contract("Crypto Boys", async (accounts) => {
         "#4f81a4",
       ];
 
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT6",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPSRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -283,7 +283,7 @@ contract("Crypto Boys", async (accounts) => {
       ];
 
       // same token name - reject
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT6",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPSRYN15Xdv4aLd3o4Aq63y1e4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -310,7 +310,7 @@ contract("Crypto Boys", async (accounts) => {
       ];
 
       // same color/colors - reject (13th value of array8 is same as 8th value of array1)
-      await cryptoBoys.mintCryptoBoy(
+      await cryptoToys.mintCryptoToy(
         "myCBNFT8",
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPSRYN15Xdv4aLd3o4Bq46y1f4GgN6kj5aK/2",
         web3.utils.toWei("1", "Ether"),
@@ -320,13 +320,13 @@ contract("Crypto Boys", async (accounts) => {
     });
 
     it("returns address of the token's owner", async () => {
-      const tokenOwner = await cryptoBoys.getTokenOwner(2);
+      const tokenOwner = await cryptoToys.getTokenOwner(2);
       assert.equal(tokenOwner, accounts[1]);
     });
 
     // returns tokenURI of the token
     it("returns metadata of a token", async () => {
-      const tokenMetaData = await cryptoBoys.getTokenMetaData(2);
+      const tokenMetaData = await cryptoToys.getTokenMetaData(2);
       assert.equal(
         tokenMetaData,
         "https://gateway.pinata.cloud/ipfs/QmYFmJgQGH4uPQRYN15Xdv4aLd9o4Aq63y1e4GgN6kj5aK/2"
@@ -334,19 +334,19 @@ contract("Crypto Boys", async (accounts) => {
     });
 
     it("returns total number of tokens minted so far", async () => {
-      const totalNumberOfTokensMinted = await cryptoBoys.getNumberOfTokensMinted();
+      const totalNumberOfTokensMinted = await cryptoToys.getNumberOfTokensMinted();
       assert.equal(totalNumberOfTokensMinted.toNumber(), 4);
     });
 
     it("returns total number of tokens owned by an address", async () => {
-      const totalNumberOfTokensOwnedByAnAddress = await cryptoBoys.getTotalNumberOfTokensOwnedByAnAddress(
+      const totalNumberOfTokensOwnedByAnAddress = await cryptoToys.getTotalNumberOfTokensOwnedByAnAddress(
         accounts[0]
       );
       assert.equal(totalNumberOfTokensOwnedByAnAddress.toNumber(), 3);
     });
 
     it("allows users to buy token for specified ethers", async () => {
-      const oldTokenOwner = await cryptoBoys.getTokenOwner(1);
+      const oldTokenOwner = await cryptoToys.getTokenOwner(1);
       assert.equal(oldTokenOwner, accounts[0]);
 
       let oldTokenOwnerBalance;
@@ -354,23 +354,23 @@ contract("Crypto Boys", async (accounts) => {
       oldTokenOwnerBalance = new web3.utils.BN(oldTokenOwnerBalance);
 
       let oldTotalNumberOfTokensOwnedBySeller;
-      oldTotalNumberOfTokensOwnedBySeller = await cryptoBoys.getTotalNumberOfTokensOwnedByAnAddress(
+      oldTotalNumberOfTokensOwnedBySeller = await cryptoToys.getTotalNumberOfTokensOwnedByAnAddress(
         accounts[0]
       );
       assert.equal(oldTotalNumberOfTokensOwnedBySeller.toNumber(), 3);
 
-      let cryptoBoy;
-      cryptoBoy = await cryptoBoys.allCryptoBoys(1, {
+      let cryptoToy;
+      cryptoToy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoBoy.numberOfTransfers.toNumber(), 0);
+      assert.equal(cryptoToy.numberOfTransfers.toNumber(), 0);
 
-      result = await cryptoBoys.buyToken(1, {
+      result = await cryptoToys.buyToken(1, {
         from: accounts[2],
         value: web3.utils.toWei("1", "Ether"),
       });
 
-      const newTokenOwner = await cryptoBoys.getTokenOwner(1);
+      const newTokenOwner = await cryptoToys.getTokenOwner(1);
       assert.equal(newTokenOwner, accounts[2]);
 
       let newTokenOwnerBalance;
@@ -378,15 +378,15 @@ contract("Crypto Boys", async (accounts) => {
       newTokenOwnerBalance = new web3.utils.BN(newTokenOwnerBalance);
 
       let newTotalNumberOfTokensOwnedBySeller;
-      newTotalNumberOfTokensOwnedBySeller = await cryptoBoys.getTotalNumberOfTokensOwnedByAnAddress(
+      newTotalNumberOfTokensOwnedBySeller = await cryptoToys.getTotalNumberOfTokensOwnedByAnAddress(
         accounts[0]
       );
       assert.equal(newTotalNumberOfTokensOwnedBySeller.toNumber(), 2);
 
-      cryptoBoy = await cryptoBoys.allCryptoBoys(1, {
+      cryptoToy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoBoy.numberOfTransfers.toNumber(), 1);
+      assert.equal(cryptoToy.numberOfTransfers.toNumber(), 1);
 
       let price;
       price = web3.utils.toWei("1", "Ether");
@@ -398,35 +398,35 @@ contract("Crypto Boys", async (accounts) => {
         exepectedBalance.toString()
       );
 
-      cryptoBoy = await cryptoBoys.allCryptoBoys(1, {
+      cryptoToy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoBoy.currentOwner, accounts[2]);
+      assert.equal(cryptoToy.currentOwner, accounts[2]);
 
-      await cryptoBoys.buyToken(2, {
+      await cryptoToys.buyToken(2, {
         from: 0x0000000000000000000000000000000000000000,
         value: web3.utils.toWei("1", "Ether"),
       }).should.be.rejected;
 
-      await cryptoBoys.buyToken(56, {
+      await cryptoToys.buyToken(56, {
         from: accounts[4],
         value: web3.utils.toWei("1", "Ether"),
       }).should.be.rejected;
 
-      await cryptoBoys.buyToken(3, {
+      await cryptoToys.buyToken(3, {
         from: accounts[0],
         value: web3.utils.toWei("1", "Ether"),
       }).should.be.rejected;
     });
 
     it("allows users to change token price", async () => {
-      let cryptoBoyPrice;
-      cryptoBoyPrice = await cryptoBoys.allCryptoBoys(1, {
+      let cryptoToyPrice;
+      cryptoToyPrice = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(web3.utils.fromWei(cryptoBoyPrice.price, "ether"), 1);
+      assert.equal(web3.utils.fromWei(cryptoToyPrice.price, "ether"), 1);
 
-      result = await cryptoBoys.changeTokenPrice(
+      result = await cryptoToys.changeTokenPrice(
         1,
         web3.utils.toWei("2", "Ether"),
         {
@@ -434,53 +434,53 @@ contract("Crypto Boys", async (accounts) => {
         }
       );
 
-      cryptoBoyPrice = await cryptoBoys.allCryptoBoys(1, {
+      cryptoToyPrice = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(web3.utils.fromWei(cryptoBoyPrice.price, "ether"), 2);
+      assert.equal(web3.utils.fromWei(cryptoToyPrice.price, "ether"), 2);
 
-      await cryptoBoys.changeTokenPrice(1, web3.utils.toWei("3", "Ether"), {
+      await cryptoToys.changeTokenPrice(1, web3.utils.toWei("3", "Ether"), {
         from: 0x0000000000000000000000000000000000000000,
       }).should.be.rejected;
 
-      await cryptoBoys.changeTokenPrice(82, web3.utils.toWei("3", "Ether"), {
+      await cryptoToys.changeTokenPrice(82, web3.utils.toWei("3", "Ether"), {
         from: accounts[2],
       }).should.be.rejected;
 
-      await cryptoBoys.changeTokenPrice(1, web3.utils.toWei("3", "Ether"), {
+      await cryptoToys.changeTokenPrice(1, web3.utils.toWei("3", "Ether"), {
         from: accounts[6],
       }).should.be.rejected;
     });
 
     it("allows users to toggle between setting the token for sale or not for sale", async () => {
-      let cryptoboy;
-      cryptoboy = await cryptoBoys.allCryptoBoys(1, {
+      let cryptotoy;
+      cryptotoy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoboy.forSale, true);
+      assert.equal(cryptotoy.forSale, true);
 
-      result = await cryptoBoys.toggleForSale(1, { from: accounts[2] });
+      result = await cryptoToys.toggleForSale(1, { from: accounts[2] });
 
-      cryptoboy = await cryptoBoys.allCryptoBoys(1, {
+      cryptotoy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoboy.forSale, false);
+      assert.equal(cryptotoy.forSale, false);
 
-      result = await cryptoBoys.toggleForSale(1, { from: accounts[2] });
+      result = await cryptoToys.toggleForSale(1, { from: accounts[2] });
 
-      cryptoboy = await cryptoBoys.allCryptoBoys(1, {
+      cryptotoy = await cryptoToys.allCryptoToys(1, {
         from: accounts[0],
       });
-      assert.equal(cryptoboy.forSale, true);
+      assert.equal(cryptotoy.forSale, true);
 
-      await cryptoBoys.toggleForSale(1, {
+      await cryptoToys.toggleForSale(1, {
         from: 0x0000000000000000000000000000000000000000,
       }).should.be.rejected;
 
-      await cryptoBoys.toggleForSale(94, { from: accounts[2] }).should.be
+      await cryptoToys.toggleForSale(94, { from: accounts[2] }).should.be
         .rejected;
 
-      await cryptoBoys.toggleForSale(1, { from: accounts[8] }).should.be
+      await cryptoToys.toggleForSale(1, { from: accounts[8] }).should.be
         .rejected;
     });
   });

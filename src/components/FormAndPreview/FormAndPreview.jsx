@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
+import CryptoToyNFTImage from "../CryptoToyNFTImage/CryptoToyNFTImage";
 
 class FormAndPreview extends Component {
   constructor(props) {
@@ -24,8 +24,8 @@ class FormAndPreview extends Component {
           bodyBorderColor: "",
         },
       ],
-      cryptoBoyName: "",
-      cryptoBoyPrice: "",
+      cryptoToyName: "",
+      cryptoToyPrice: "",
     };
   }
 
@@ -37,8 +37,8 @@ class FormAndPreview extends Component {
     e.preventDefault();
     this.props.mintMyNFT(
       this.state.userSelectedColors[0],
-      this.state.cryptoBoyName,
-      this.state.cryptoBoyPrice
+      this.state.cryptoToyName,
+      this.state.cryptoToyPrice
     );
   };
 
@@ -241,7 +241,7 @@ class FormAndPreview extends Component {
               </div>
             </div>
             <div className="col-md-6 d-flex justify-content-center align-items-center">
-              <CryptoBoyNFTImage colors={this.state.userSelectedColors[0]} />
+              <CryptoToyNFTImage colors={this.state.userSelectedColors[0]} />
             </div>
           </div>
           <div className="row">
@@ -410,15 +410,15 @@ class FormAndPreview extends Component {
             </div>
             <div className="col-md-6">
               <div className="form-group">
-                <label htmlFor="cryptoBoyName">Name</label>
+                <label htmlFor="cryptoToyName">Name</label>
                 <input
                   required
                   type="text"
-                  value={this.state.cryptoBoyName}
+                  value={this.state.cryptoToyName}
                   className="form-control"
                   placeholder="Enter Your Crypto Boy's Name"
                   onChange={(e) =>
-                    this.setState({ cryptoBoyName: e.target.value })
+                    this.setState({ cryptoToyName: e.target.value })
                   }
                 />
               </div>
@@ -428,12 +428,12 @@ class FormAndPreview extends Component {
                   required
                   type="number"
                   name="price"
-                  id="cryptoBoyPrice"
-                  value={this.state.cryptoBoyPrice}
+                  id="cryptoToyPrice"
+                  value={this.state.cryptoToyPrice}
                   className="form-control"
                   placeholder="Enter Price In Ξ"
                   onChange={(e) =>
-                    this.setState({ cryptoBoyPrice: e.target.value })
+                    this.setState({ cryptoToyPrice: e.target.value })
                   }
                 />
               </div>

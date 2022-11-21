@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
-class CryptoBoyNFTDetails extends Component {
+class CryptoToyNFTDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newCryptoBoyPrice: "",
+      newCryptoToyPrice: "",
     };
   }
 
@@ -14,77 +14,77 @@ class CryptoBoyNFTDetails extends Component {
 
   render() {
     return (
-      <div key={this.props.cryptoboy.tokenId.toNumber()} className="mt-4">
+      <div key={this.props.cryptotoy.tokenId.toNumber()} className="mt-4">
         <p>
           <span className="font-weight-bold">Token Id</span> :{" "}
-          {this.props.cryptoboy.tokenId.toNumber()}
+          {this.props.cryptotoy.tokenId.toNumber()}
         </p>
         <p>
           <span className="font-weight-bold">Name</span> :{" "}
-          {this.props.cryptoboy.tokenName}
+          {this.props.cryptotoy.tokenName}
         </p>
         <p>
           <span className="font-weight-bold">Minted By</span> :{" "}
-          {this.props.cryptoboy.mintedBy.substr(0, 5) +
+          {this.props.cryptotoy.mintedBy.substr(0, 5) +
             "..." +
-            this.props.cryptoboy.mintedBy.slice(
-              this.props.cryptoboy.mintedBy.length - 5
+            this.props.cryptotoy.mintedBy.slice(
+              this.props.cryptotoy.mintedBy.length - 5
             )}
         </p>
         <p>
           <span className="font-weight-bold">Owned By</span> :{" "}
-          {this.props.cryptoboy.currentOwner.substr(0, 5) +
+          {this.props.cryptotoy.currentOwner.substr(0, 5) +
             "..." +
-            this.props.cryptoboy.currentOwner.slice(
-              this.props.cryptoboy.currentOwner.length - 5
+            this.props.cryptotoy.currentOwner.slice(
+              this.props.cryptotoy.currentOwner.length - 5
             )}
         </p>
         <p>
           <span className="font-weight-bold">Previous Owner</span> :{" "}
-          {this.props.cryptoboy.previousOwner.substr(0, 5) +
+          {this.props.cryptotoy.previousOwner.substr(0, 5) +
             "..." +
-            this.props.cryptoboy.previousOwner.slice(
-              this.props.cryptoboy.previousOwner.length - 5
+            this.props.cryptotoy.previousOwner.slice(
+              this.props.cryptotoy.previousOwner.length - 5
             )}
         </p>
         <p>
           <span className="font-weight-bold">Price</span> :{" "}
           {window.web3.utils.fromWei(
-            this.props.cryptoboy.price.toString(),
+            this.props.cryptotoy.price.toString(),
             "Ether"
           )}{" "}
           Ξ
         </p>
         <p>
           <span className="font-weight-bold">No. of Transfers</span> :{" "}
-          {this.props.cryptoboy.numberOfTransfers.toNumber()}
+          {this.props.cryptotoy.numberOfTransfers.toNumber()}
         </p>
         <div>
-          {this.props.accountAddress === this.props.cryptoboy.currentOwner ? (
+          {this.props.accountAddress === this.props.cryptotoy.currentOwner ? (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 this.callChangeTokenPriceFromApp(
-                  this.props.cryptoboy.tokenId.toNumber(),
-                  this.state.newCryptoBoyPrice
+                  this.props.cryptotoy.tokenId.toNumber(),
+                  this.state.newCryptoToyPrice
                 );
               }}
             >
               <div className="form-group mt-4 ">
-                <label htmlFor="newCryptoBoyPrice">
+                <label htmlFor="newCryptoToyPrice">
                   <span className="font-weight-bold">Change Token Price</span> :
                 </label>{" "}
                 <input
                   required
                   type="number"
-                  name="newCryptoBoyPrice"
-                  id="newCryptoBoyPrice"
-                  value={this.state.newCryptoBoyPrice}
+                  name="newCryptoToyPrice"
+                  id="newCryptoToyPrice"
+                  value={this.state.newCryptoToyPrice}
                   className="form-control w-50"
                   placeholder="Enter new price"
                   onChange={(e) =>
                     this.setState({
-                      newCryptoBoyPrice: e.target.value,
+                      newCryptoToyPrice: e.target.value,
                     })
                   }
                 />
@@ -100,14 +100,14 @@ class CryptoBoyNFTDetails extends Component {
           ) : null}
         </div>
         <div>
-          {this.props.accountAddress === this.props.cryptoboy.currentOwner ? (
-            this.props.cryptoboy.forSale ? (
+          {this.props.accountAddress === this.props.cryptotoy.currentOwner ? (
+            this.props.cryptotoy.forSale ? (
               <button
                 className="btn btn-outline-danger mt-4 w-50"
                 style={{ fontSize: "0.8rem", letterSpacing: "0.14rem" }}
                 onClick={() =>
                   this.props.toggleForSale(
-                    this.props.cryptoboy.tokenId.toNumber()
+                    this.props.cryptotoy.tokenId.toNumber()
                   )
                 }
               >
@@ -119,7 +119,7 @@ class CryptoBoyNFTDetails extends Component {
                 style={{ fontSize: "0.8rem", letterSpacing: "0.14rem" }}
                 onClick={() =>
                   this.props.toggleForSale(
-                    this.props.cryptoboy.tokenId.toNumber()
+                    this.props.cryptotoy.tokenId.toNumber()
                   )
                 }
               >
@@ -129,22 +129,22 @@ class CryptoBoyNFTDetails extends Component {
           ) : null}
         </div>
         <div>
-          {this.props.accountAddress !== this.props.cryptoboy.currentOwner ? (
-            this.props.cryptoboy.forSale ? (
+          {this.props.accountAddress !== this.props.cryptotoy.currentOwner ? (
+            this.props.cryptotoy.forSale ? (
               <button
                 className="btn btn-outline-primary mt-3 w-50"
-                value={this.props.cryptoboy.price}
+                value={this.props.cryptotoy.price}
                 style={{ fontSize: "0.8rem", letterSpacing: "0.14rem" }}
                 onClick={(e) =>
-                  this.props.buyCryptoBoy(
-                    this.props.cryptoboy.tokenId.toNumber(),
+                  this.props.buyCryptoToy(
+                    this.props.cryptotoy.tokenId.toNumber(),
                     e.target.value
                   )
                 }
               >
                 Buy For{" "}
                 {window.web3.utils.fromWei(
-                  this.props.cryptoboy.price.toString(),
+                  this.props.cryptotoy.price.toString(),
                   "Ether"
                 )}{" "}
                 Ξ
@@ -158,7 +158,7 @@ class CryptoBoyNFTDetails extends Component {
                 >
                   Buy For{" "}
                   {window.web3.utils.fromWei(
-                    this.props.cryptoboy.price.toString(),
+                    this.props.cryptotoy.price.toString(),
                     "Ether"
                   )}{" "}
                   Ξ
@@ -173,4 +173,4 @@ class CryptoBoyNFTDetails extends Component {
   }
 }
 
-export default CryptoBoyNFTDetails;
+export default CryptoToyNFTDetails;

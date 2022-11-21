@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-undef
-const CryptoBoys = artifacts.require("CryptoBoys");
+const CryptoToys = artifacts.require("CryptoToys");
 
 module.exports = async function(deployer) {
-  await deployer.deploy(CryptoBoys);
+  await deployer.deploy(CryptoToys);
 };
