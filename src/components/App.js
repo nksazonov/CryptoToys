@@ -15,10 +15,16 @@ import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
 import Queries from "./Queries/Queries";
 
 const ipfsClient = require("ipfs-http-client");
+const INFURA_ID = process.env.REACT_APP_INFURA_PROJECT_ID;
+const INFURA_SECRET_KEY = process.env.REACT_APP_INFURA_API_SECRET_KEY;
+const auth = 'Basic ' + Buffer.from(INFURA_ID + ':' + INFURA_SECRET_KEY).toString('base64');
 const ipfs = ipfsClient({
   host: "ipfs.infura.io",
   port: 5001,
   protocol: "https",
+  headers: {
+    authorization: auth,
+  }
 });
 
 class App extends Component {
@@ -241,8 +247,10 @@ class App extends Component {
         },
       };
       const cid = await ipfs.add(JSON.stringify(tokenObject));
-      let tokenURI = `https://ipfs.infura.io/ipfs/${cid.path}`;
+      let tokenURI = `https://cryptoboys.infura-ipfs.io/ipfs/${cid.path}`;
+      console.log(tokenURI);
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
+      console.log(this.state.accountAddress);
       this.state.cryptoBoysContract.methods
         .mintCryptoBoy(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
