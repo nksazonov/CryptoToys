@@ -1,27 +1,30 @@
 import React, { Component } from "react";
 import CryptoToyNFTImage from "../CryptoToyNFTImage/CryptoToyNFTImage";
 
+const DEFAULT_BORDER_COLOR = '#55595C';
+const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+
 class FormAndPreview extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userSelectedColors: [
         {
-          cardBorderColor: "",
-          cardBackgroundColor: "",
-          headBorderColor: "",
-          headBackgroundColor: "",
-          leftEyeBorderColor: "",
-          rightEyeBorderColor: "",
-          leftEyeBackgroundColor: "",
-          rightEyeBackgroundColor: "",
-          leftPupilBackgroundColor: "",
-          rightPupilBackgroundColor: "",
-          mouthColor: "",
-          neckBackgroundColor: "",
-          neckBorderColor: "",
-          bodyBackgroundColor: "",
-          bodyBorderColor: "",
+          cardBorderColor: DEFAULT_BORDER_COLOR,
+          cardBackgroundColor: DEFAULT_BACKGROUND_COLOR,
+          headBorderColor: DEFAULT_BORDER_COLOR,
+          headBackgroundColor: DEFAULT_BACKGROUND_COLOR,
+          leftEyeBorderColor: DEFAULT_BORDER_COLOR,
+          rightEyeBorderColor: DEFAULT_BORDER_COLOR,
+          leftEyeBackgroundColor: DEFAULT_BACKGROUND_COLOR,
+          rightEyeBackgroundColor: DEFAULT_BACKGROUND_COLOR,
+          leftPupilBackgroundColor: DEFAULT_BORDER_COLOR,
+          rightPupilBackgroundColor: DEFAULT_BORDER_COLOR,
+          mouthColor: DEFAULT_BORDER_COLOR,
+          neckBackgroundColor: DEFAULT_BACKGROUND_COLOR,
+          neckBorderColor: DEFAULT_BORDER_COLOR,
+          bodyBackgroundColor: DEFAULT_BACKGROUND_COLOR,
+          bodyBorderColor: DEFAULT_BORDER_COLOR,
         },
       ],
       cryptoToyName: "",
@@ -47,7 +50,7 @@ class FormAndPreview extends Component {
       <div>
         <div className="card mt-1">
           <div className="card-body align-items-center d-flex justify-content-center">
-            <h5>Color Your Crypto Boy As You Want It To be!</h5>
+            <h5>Color Your Crypto Toy As You Want It To be!</h5>
           </div>
         </div>
         <form onSubmit={this.callMintMyNFTFromApp} className="pt-4 mt-1">
@@ -416,7 +419,7 @@ class FormAndPreview extends Component {
                   type="text"
                   value={this.state.cryptoToyName}
                   className="form-control"
-                  placeholder="Enter Your Crypto Boy's Name"
+                  placeholder="Enter Your Crypto Toy's Name"
                   onChange={(e) =>
                     this.setState({ cryptoToyName: e.target.value })
                   }
@@ -443,7 +446,7 @@ class FormAndPreview extends Component {
                 type="submit"
                 className="btn mt-4 btn-block btn-outline-primary"
               >
-                Mint My Crypto Boy
+                Mint My Crypto Toy
               </button>
               <div className="mt-4">
                 {this.props.nameIsUsed ? (

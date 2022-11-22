@@ -43,7 +43,7 @@ class App extends Component {
       totalTokensOwnedByAccount: 0,
       nameIsUsed: false,
       colorIsUsed: false,
-      colorsUsed: [],
+      colorPaletteUsed: [],
       lastMintTime: null,
     };
   }
@@ -62,7 +62,7 @@ class App extends Component {
         lastMintTime: localStorage.getItem(this.state.accountAddress),
       });
       this.state.lastMintTime === undefined || this.state.lastMintTime === null
-        ? (mintBtn.innerHTML = "Mint My Crypto Boy")
+        ? (mintBtn.innerHTML = "Mint My Crypto Toy")
         : this.checkIfCanMint(parseInt(this.state.lastMintTime));
     }
   };
@@ -76,7 +76,7 @@ class App extends Component {
       const diff = countDownTime - now;
       if (diff < 0) {
         mintBtn.removeAttribute("disabled");
-        mintBtn.innerHTML = "Mint My Crypto Boy";
+        mintBtn.innerHTML = "Mint My Crypto Toy";
         localStorage.removeItem(this.state.accountAddress);
         clearInterval(interval);
       } else {
@@ -141,7 +141,7 @@ class App extends Component {
         totalTokensMinted = totalTokensMinted.toNumber();
         this.setState({ totalTokensMinted });
         let totalTokensOwnedByAccount = await cryptoToysContract.methods
-          .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
+          .getNumberOfTokensOwned(this.state.accountAddress)
           .call();
         totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
         this.setState({ totalTokensOwnedByAccount });
@@ -180,23 +180,15 @@ class App extends Component {
   mintMyNFT = async (colors, name, tokenPrice) => {
     this.setState({ loading: true });
     const colorsArray = Object.values(colors);
-    let colorsUsed = [];
-    for (let i = 0; i < colorsArray.length; i++) {
-      if (colorsArray[i] !== "") {
-        let colorIsUsed = await this.state.cryptoToysContract.methods
-          .colorExists(colorsArray[i])
+
+    const colorPaletteUsed = await this.state.cryptoToysContract.methods
+          .isColorPaletteUsed(colorsArray)
           .call();
-        if (colorIsUsed) {
-          colorsUsed = [...colorsUsed, colorsArray[i]];
-        } else {
-          continue;
-        }
-      }
-    }
+
     const nameIsUsed = await this.state.cryptoToysContract.methods
-      .tokenNameExists(name)
+      .tokenNameUsed(name)
       .call();
-    if (colorsUsed.length === 0 && !nameIsUsed) {
+    if (!nameIsUsed && !colorPaletteUsed) {
       const {
         cardBorderColor,
         cardBackgroundColor,
@@ -248,9 +240,7 @@ class App extends Component {
       };
       const cid = await ipfs.add(JSON.stringify(tokenObject));
       let tokenURI = `https://cryptotoys.infura-ipfs.io/ipfs/${cid.path}`;
-      console.log(tokenURI);
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
-      console.log(this.state.accountAddress);
       this.state.cryptoToysContract.methods
         .mintCryptoToy(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
@@ -263,9 +253,9 @@ class App extends Component {
       if (nameIsUsed) {
         this.setState({ nameIsUsed: true });
         this.setState({ loading: false });
-      } else if (colorsUsed.length !== 0) {
+      } else if (colorPaletteUsed) {
         this.setState({ colorIsUsed: true });
-        this.setState({ colorsUsed });
+        this.setState({ colorPaletteUsed });
         this.setState({ loading: false });
       }
     }
@@ -335,7 +325,7 @@ class App extends Component {
                     mintMyNFT={this.mintMyNFT}
                     nameIsUsed={this.state.nameIsUsed}
                     colorIsUsed={this.state.colorIsUsed}
-                    colorsUsed={this.state.colorsUsed}
+                    colorPaletteUsed={this.state.colorPaletteUsed}
                     setMintBtnTimer={this.setMintBtnTimer}
                   />
                 )}

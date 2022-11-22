@@ -24,12 +24,12 @@ contract("Crypto Toys", async (accounts) => {
 
     it("has a name", async () => {
       const name = await cryptoToys.collectionName();
-      assert.equal(name, "Crypto Boys Collection");
+      assert.equal(name, "Crypto Toys Collection");
     });
 
     it("has a symbol", async () => {
       const symbol = await cryptoToys.collectionNameSymbol();
-      assert.equal(symbol, "CB");
+      assert.equal(symbol, "CT");
     });
   });
 

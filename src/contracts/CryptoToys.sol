@@ -72,7 +72,7 @@ contract CryptoToys is ERC721 {
         return totalSupply();
     }
 
-    function getTotalNumberOfTokensOwnedByAnAddress(address _owner)
+    function getNumberOfTokensOwned(address _owner)
         public
         view
         returns (uint256)
@@ -82,6 +82,14 @@ contract CryptoToys is ERC721 {
 
     function getTokenExists(uint256 _tokenId) public view returns (bool) {
         return _exists(_tokenId);
+    }
+
+    function isColorPaletteUsed(string[] calldata _colors)
+        external
+        view
+        returns (bool)
+    {
+        return colorPaletteUsed[_encodeColorPalette(_colors)];
     }
 
     // ======================
@@ -96,7 +104,6 @@ contract CryptoToys is ERC721 {
     ) external {
         _requireTokenNotExist(cryptoToyCounter + 1);
         _requireUniqueToken(_name, _tokenURI, _colors);
-
         cryptoToyCounter++;
 
         // mint the token and set uri
@@ -104,7 +111,7 @@ contract CryptoToys is ERC721 {
         _setTokenURI(cryptoToyCounter, _tokenURI);
 
         // mark token minted
-        colorPaletteUsed[_encodeColorPalette(_colors)];
+        colorPaletteUsed[_encodeColorPalette(_colors)] = true;
         tokenURIUsed[_tokenURI] = true;
         tokenNameUsed[_name] = true;
 
