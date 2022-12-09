@@ -90,8 +90,10 @@ class App extends Component {
 
   loadWeb3 = async () => {
     if (window.ethereum) {
+      console.log('ethereum');
       window.web3 = new Web3(window.ethereum);
     } else if (window.web3) {
+      console.log('web3');
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
       window.alert(
@@ -101,7 +103,7 @@ class App extends Component {
   };
 
   loadBlockchainData = async () => {
-    const web3 = window.web3;
+    const web3 = new Web3(window.ethereum);
     const accounts = await web3.eth.getAccounts();
     if (accounts.length === 0) {
       this.setState({ metamaskConnected: false });
@@ -240,7 +242,7 @@ class App extends Component {
       };
       const cid = await ipfs.add(JSON.stringify(tokenObject));
       let tokenURI = `https://cryptotoys.infura-ipfs.io/ipfs/${cid.path}`;
-      const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
+      const price = new Web3(window.ethereum).utils.toWei(tokenPrice.toString(), "Ether");
       this.state.cryptoToysContract.methods
         .mintCryptoToy(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
@@ -274,7 +276,7 @@ class App extends Component {
 
   changeTokenPrice = (tokenId, newPrice) => {
     this.setState({ loading: true });
-    const newTokenPrice = window.web3.utils.toWei(newPrice, "Ether");
+    const newTokenPrice = new Web3(window.ethereum).utils.toWei(newPrice, "Ether");
     this.state.cryptoToysContract.methods
       .changeTokenPrice(tokenId, newTokenPrice)
       .send({ from: this.state.accountAddress })

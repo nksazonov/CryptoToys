@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import Web3 from 'web3';
+
 class CryptoToyNFTDetails extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +51,7 @@ class CryptoToyNFTDetails extends Component {
         </p>
         <p>
           <span className="font-weight-bold">Price</span> :{" "}
-          {window.web3.utils.fromWei(
+          {new Web3(window.ethereum).utils.fromWei(
             this.props.cryptotoy.price.toString(),
             "Ether"
           )}{" "}
@@ -143,7 +145,7 @@ class CryptoToyNFTDetails extends Component {
                 }
               >
                 Buy For{" "}
-                {window.web3.utils.fromWei(
+                {new Web3(window.ethereum).utils.fromWei(
                   this.props.cryptotoy.price.toString(),
                   "Ether"
                 )}{" "}
@@ -157,7 +159,7 @@ class CryptoToyNFTDetails extends Component {
                   className="btn btn-outline-primary mt-3 w-50"
                 >
                   Buy For{" "}
-                  {window.web3.utils.fromWei(
+                  {new Web3(window.ethereum).utils.fromWei(
                     this.props.cryptotoy.price.toString(),
                     "Ether"
                   )}{" "}

@@ -1,4 +1,5 @@
 import React from "react";
+import Web3 from 'web3';
 
 const MyCryptoToyNFTDetails = (props) => {
   const {
@@ -20,7 +21,7 @@ const MyCryptoToyNFTDetails = (props) => {
       </p>
       <p>
         <span className="font-weight-bold">Price</span> :{" "}
-        {window.web3.utils.fromWei(price.toString(), "Ether")} Ξ
+        {new Web3(window.ethereum).utils.fromWei(price.toString(), "Ether")} Ξ
       </p>
       <p>
         <span className="font-weight-bold">No. of Transfers</span> :{" "}
