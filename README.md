@@ -44,13 +44,13 @@ ganache-cli --port 7545
 ### Open new terminal window and clone this repository
 
 ```shell
-git clone https://github.com/nksazonov/TODO:
+git clone https://github.com/nksazonov/CryptoToys
 ```
 
 ### Install dependencies
 
 ```shell
-cd NFT-marketplace-cryptoToys
+cd CryptoToys
 npm install
 ```
 
